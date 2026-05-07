@@ -28,7 +28,7 @@ impl de::Error for DeError {
 impl fmt::Display for DeError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let msg = match self {
-            DeError::Message(ref msg) => msg,
+            DeError::Message(msg) => msg,
             DeError::UnknownField => "Unknown field",
             DeError::InvalidType(_) => "Invalid type",
             DeError::UnsupportedType => "Type unsupported",

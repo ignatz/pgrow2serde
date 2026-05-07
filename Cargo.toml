@@ -1,16 +1,12 @@
+# Fork of https://github.com/deknowny/pgrow2serde.
 [package]
-authors = ["a.power@1aim.com"]
+name = "trailbase-pgrow2serde"
 description = "Easily deserialize postgres rows"
 license = "MIT/Apache-2.0"
-name = "pgrow2serde"
 homepage = "https://github.com/deknowny/pgrow2serde"
 repository = "https://github.com/deknowny/pgrow2serde"
 version = "0.1.0"
-edition = "2018"
-
-[badges]
-[badges.travis-ci]
-repository = "1aim/serde_postgres"
+edition = "2024"
 
 [dependencies]
 log = "0.4.29"
