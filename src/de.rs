@@ -176,13 +176,18 @@ impl<'de, 'a, 'b> de::Deserializer<'de> for &'b mut Deserializer<'a> {
 
         // We handle different types differently, e.g. BYTEA vs BITARRAY.
         // BITARRAY also encodes
-        if raw.ty.name() != "bytea" {
-            return Err(DeError::UnsupportedType);
-        }
+        match raw.ty.name() {
+            "bytea" | "uuid" => {
+                let mut v = Vec::from_iter(raw.bytes.iter().copied());
+                v.resize(n, 0);
+                visitor.visit_seq(SeqDeserializer::new(v.into_iter()))
+            }
+            name => {
+                log::error!("Unsupported type: {name}");
 
-        let mut v = Vec::from_iter(raw.bytes.iter().copied());
-        v.resize(n, 0);
-        visitor.visit_seq(SeqDeserializer::new(v.into_iter()))
+                Err(DeError::UnsupportedType)
+            }
+        }
     }
 
     fn deserialize_tuple_struct<V: Visitor<'de>>(

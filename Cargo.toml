@@ -13,6 +13,7 @@ edition = "2018"
 repository = "1aim/serde_postgres"
 
 [dependencies]
+log = "0.4.29"
 serde = "1.0.171"
 tokio-postgres = "0.7.8"
 
