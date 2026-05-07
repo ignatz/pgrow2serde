@@ -51,4 +51,4 @@
 pub mod de;
 mod raw;
 
-pub use de::{from_row, from_rows, Deserializer, DeError, DeResult};
+pub use de::{from_row, from_rows, DeError, DeResult, Deserializer};

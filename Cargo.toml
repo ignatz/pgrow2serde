@@ -21,13 +21,3 @@ postgres = "0.19.5"
 serde = { version = "1.0.171", features = ["derive"] }
 tokio = { version = "1.29.1", features = ["macros", "rt-multi-thread"] }
 tokio-postgres = "0.7.8"
-
-# [dependencies]
-# serde = "1.0.104"
-# tokio-postgres = { version = "0.5.2", default_features = false }
-
-# [dev-dependencies]
-# serde = { version = "1.0.104", features = [ "derive" ] }
-# tokio = { version = "0.2.11", features = [ "macros" ] }
-# tokio-postgres = "0.5.2"
-# postgres = "0.17.4"

@@ -6,11 +6,17 @@ use tokio_postgres::types::{FromSql, Type};
 ///
 /// This type intentionally cannot be converted from `NULL`, and attempting to
 /// do so will result in an error. Instead, use `Option<Raw>`.
-pub struct Raw<'a>(pub &'a [u8]);
+pub struct Raw<'a> {
+    pub ty: Type,
+    pub bytes: &'a [u8],
+}
 
 impl<'a> FromSql<'a> for Raw<'a> {
-    fn from_sql(_ty: &Type, raw: &'a [u8]) -> Result<Self, Box<dyn Error + Send + Sync>> {
-        Ok(Raw(raw))
+    fn from_sql(ty: &Type, raw: &'a [u8]) -> Result<Self, Box<dyn Error + Send + Sync>> {
+        Ok(Raw {
+            ty: ty.clone(),
+            bytes: raw,
+        })
     }
 
     fn accepts(_ty: &Type) -> bool {
@@ -22,6 +28,6 @@ impl<'a> Deref for Raw<'a> {
     type Target = [u8];
 
     fn deref(&self) -> &Self::Target {
-        self.0
+        self.bytes
     }
 }
