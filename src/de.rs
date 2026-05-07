@@ -1,5 +1,5 @@
 //! Deserialize postgres rows into a Rust data structure.
-use crate::raw::Raw;
+use crate::raw::{Boolean, Raw};
 use serde::de::{self, value::SeqDeserializer, Deserialize, IntoDeserializer, Visitor};
 use std::iter::FromIterator;
 use tokio_postgres::Row;
@@ -87,7 +87,8 @@ impl<'de, 'a, 'b> de::Deserializer<'de> for &'b mut Deserializer<'a> {
     }
 
     fn deserialize_bool<V: Visitor<'de>>(self, visitor: V) -> DeResult<V::Value> {
-        visit_value!(self, visitor.visit_bool)
+        let boolean = get_value!(self, Boolean);
+        visitor.visit_bool(*boolean)
     }
 
     fn deserialize_i8<V: Visitor<'de>>(self, visitor: V) -> DeResult<V::Value> {
@@ -235,8 +236,10 @@ impl<'de, 'a> de::MapAccess<'de> for Deserializer<'a> {
     fn next_value_seed<T: de::DeserializeSeed<'de>>(&mut self, seed: T) -> DeResult<T::Value> {
         let result = seed.deserialize(&mut *self);
         self.index += 1;
+
         if let Err(DeError::InvalidType(err)) = result {
             let name = self.input.columns().get(self.index - 1).unwrap().name();
+
             Err(DeError::InvalidType(format!("{} {}", name, err)))
         } else {
             result

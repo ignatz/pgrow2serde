@@ -13,7 +13,7 @@ pub struct Raw<'a> {
 
 impl<'a> FromSql<'a> for Raw<'a> {
     fn from_sql(ty: &Type, raw: &'a [u8]) -> Result<Self, Box<dyn Error + Send + Sync>> {
-        Ok(Raw {
+        Ok(Self {
             ty: ty.clone(),
             bytes: raw,
         })
@@ -29,5 +29,32 @@ impl<'a> Deref for Raw<'a> {
 
     fn deref(&self) -> &Self::Target {
         self.bytes
+    }
+}
+
+pub struct Boolean(bool);
+
+impl<'a> FromSql<'a> for Boolean {
+    fn from_sql(ty: &Type, raw: &'a [u8]) -> Result<Self, Box<dyn Error + Send + Sync>> {
+        match ty.name() {
+            "int4" => Ok(Self(i32::from_sql(ty, raw)? > 0)),
+            "int8" => Ok(Self(i64::from_sql(ty, raw)? > 0)),
+            _ => Ok(Self(bool::from_sql(ty, raw)?)),
+        }
+    }
+
+    fn accepts(ty: &Type) -> bool {
+        match ty.name() {
+            "bool" | "int4" | "int8" => true,
+            _ => false,
+        }
+    }
+}
+
+impl Deref for Boolean {
+    type Target = bool;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
     }
 }
