@@ -9,12 +9,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-log = "0.4.29"
-serde = "1.0.171"
-tokio-postgres = "0.7.8"
+log = { version = "0.4.29", default-features = false }
+serde = { version = "1.0.171", default-features = false, features = ["derive", "std"] }
+tokio-postgres = { version = "0.7.8", default-features = false }
 
 [dev-dependencies]
 postgres = "0.19.5"
-serde = { version = "1.0.171", features = ["derive"] }
 tokio = { version = "1.29.1", features = ["macros", "rt-multi-thread"] }
-tokio-postgres = "0.7.8"
